@@ -1,5 +1,5 @@
-const tf = require('@tensorflow/tfjs');
-require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs-node-gpu');
+require('@tensorflow/tfjs-node-gpu');
 
 const fs = require('fs').promises;
 const { nameToASCII, shuffle } = require('./utils');
@@ -8,7 +8,7 @@ const getNamesFromCSV = async () => {
   const males = new Set();
   const females = new Set();
 
-  const contents = await fs.readFile('gender.csv', 'utf8');
+  const contents = await fs.readFile('name-gender-dataset.csv', 'utf8');
   const rows = contents.split('\n').map(r => r.split(','));
   for (let i = 0; i < rows.length; i += 1) {
     if (rows[i][0] == 'male') males.add(rows[i][1]);
@@ -41,7 +41,7 @@ async function train() {
   await model.fit(xs, ys, {
     shuffle: true,
     // validationSplit: 0.1,
-    epochs: 5000,
+    epochs: 100,
   });
 
   await model.save('file://./model');
